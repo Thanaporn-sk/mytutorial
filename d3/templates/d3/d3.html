@@ -1,13 +1,15 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-
-body {
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+ {% endblock%}
+{% block pageresource%}
+<style type="text/css">
+body #content #d3chart {
   max-width: 960px;
-  margin: 1px;
+  margin: 10px;
 }
 
-div {
+#content #d3chart div {
   width: 10px;
   height: 10px;
   margin: 1px 0 0 1px;
@@ -17,8 +19,10 @@ div {
 }
 
 </style>
-<body>
+{% endblock %} 
+{% block content %}
 <script src="//d3js.org/d3.v4.0.0-alpha.24.min.js"></script>
+<div id="d3chart"></div>
 <script>
 
 var n = 4002;
@@ -27,7 +31,7 @@ var whiteblue = d3.interpolateRgb("#eee", "steelblue"),
     blueorange = d3.interpolateRgb("steelblue", "orange"),
     orangewhite = d3.interpolateRgb("orange", "#eee");
 
-d3.select("body").selectAll("div")
+d3.select("#d3chart").selectAll("div")
     .data(d3.range(n))
   .enter().append("div")
   .transition()
@@ -48,3 +52,4 @@ d3.select("body").selectAll("div")
       });
 
 </script>
+{% endblock %} 
