@@ -1,6 +1,8 @@
-{% load staticfiles %}
-<!DOCTYPE html>
-<meta charset="utf-8">
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+ {% endblock%}
+{% block pageresource%}
 <style>
 
 text {
@@ -14,6 +16,8 @@ text {
 }
 
 </style>
+{% endblock %} 
+{% block content %}
 <svg width="960" height="960"><g transform="translate(1,1)"></g></svg>
 <script src="//d3js.org/d3.v4.0.0-alpha.35.min.js"></script>
 <script>
@@ -85,3 +89,4 @@ function hovered(hover) {
 }
 
 </script>
+{% endblock %} 

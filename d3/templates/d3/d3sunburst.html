@@ -1,9 +1,9 @@
-{% load staticfiles %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Sequences sunburst</title>
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+ {% endblock%}
+{% block pageresource%}
+
     <script src="//d3js.org/d3.v3.min.js"></script>
     <link rel="stylesheet" type="text/css"
       href="https://fonts.googleapis.com/css?family=Open+Sans:400,600">
@@ -65,11 +65,34 @@
   font-size: 2.5em;
 }
    </style> 
+
+ {% endblock %} 
+{% block content %}
+    <div id="main">
+      <div id="sequence"></div>
+      <div id="chart">
+        <div id="explanation" style="visibility: hidden;">
+          <span id="percentage"></span><br/>
+          of visits begin with this sequence of pages
+        </div>
+      </div>
+    </div>
+    <div id="sidebar">
+      <input type="checkbox" id="togglelegend"> Legend<br/>
+      <div id="legend" style="visibility: hidden;"></div>
+    </div>
+    <!--script type="text/javascript" src="sequences.js"></script-->
+    <script type="text/javascript">
+      // Hack to make this example display correctly in an iframe on bl.ocks.org
+      d3.select(self.frameElement).style("height", "700px");
+  </script> 
+
    <script type="text/javascript">
 // Dimensions of sunburst.
 var width = 750;
 var height = 600;
 var radius = Math.min(width, height) / 2;
+var datafile = "{% static "csv/visit_sequences.csv" %}";
 
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
 var b = {
@@ -108,7 +131,7 @@ var arc = d3.svg.arc()
 
 // Use d3.text and d3.csv.parseRows so that we do not need to have a header
 // row, and can receive the csv as an array of arrays.
-d3.text("{% static "csv/visit_sequences.csv" %}", function(text) {
+d3.text(datafile, function(text) {
   var csv = d3.csv.parseRows(text);
   var json = buildHierarchy(csv);
   createVisualization(json);
@@ -372,25 +395,6 @@ function buildHierarchy(csv) {
   return root;
 };
    </script>
-  </head>
-  <body>
-    <div id="main">
-      <div id="sequence"></div>
-      <div id="chart">
-        <div id="explanation" style="visibility: hidden;">
-          <span id="percentage"></span><br/>
-          of visits begin with this sequence of pages
-        </div>
-      </div>
-    </div>
-    <div id="sidebar">
-      <input type="checkbox" id="togglelegend"> Legend<br/>
-      <div id="legend" style="visibility: hidden;"></div>
-    </div>
-    <!--script type="text/javascript" src="sequences.js"></script-->
-    <script type="text/javascript">
-      // Hack to make this example display correctly in an iframe on bl.ocks.org
-      d3.select(self.frameElement).style("height", "700px");
-  </script> 
-  </body>
-</html>
+  
+
+ {% endblock %} 

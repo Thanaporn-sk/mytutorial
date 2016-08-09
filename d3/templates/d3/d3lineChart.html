@@ -1,15 +1,9 @@
-{% load staticfiles %}
-<!DOCTYPE html>
-<meta charset="utf-8">
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+ {% endblock%}
+{% block pageresource%}
 <style>
-
-.bar {
-  fill: steelblue;
-}
-
-.bar:hover {
-  fill: brown;
-}
 
 .axis {
   font: 10px sans-serif;
@@ -22,33 +16,37 @@
   shape-rendering: crispEdges;
 }
 
-.x.axis path {
+.axis--x path {
   display: none;
 }
 
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
 </style>
-<body>
-<script src="//d3js.org/d3.v3.min.js"></script>
+{% endblock %} 
+{% block content %}
+<script src="//d3js.org/d3.v4.min.js"></script>
 <script>
 
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+var parseTime = d3.timeParse("%d-%b-%y");
 
-var y = d3.scale.linear()
+var x = d3.scaleTime()
+    .range([0, width]);
+
+var y = d3.scaleLinear()
     .range([height, 0]);
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .ticks(10, "%");
+var line = d3.line()
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.close); });
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -56,40 +54,39 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.tsv("{% static "tsv/lineChart.tsv" %} ", type, function(error, data) {
+d3.tsv("{% static "tsv/lineChart.tsv" %}", type, function(error, data) {
   if (error) throw error;
 
-  x.domain(data.map(function(d) { return d.letter; }));
-  y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+  y.domain(d3.extent(data, function(d) { return d.close; }));
 
   svg.append("g")
-      .attr("class", "x axis")
+      .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+      .call(d3.axisBottom(x));
 
   svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(y))
     .append("text")
+      .attr("class", "axis-title")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Frequency");
+      .text("Price ($)");
 
-  svg.selectAll(".bar")
-      .data(data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.letter); })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.frequency); })
-      .attr("height", function(d) { return height - y(d.frequency); });
+  svg.append("path")
+      .datum(data)
+      .attr("class", "line")
+      .attr("d", line);
 });
 
 function type(d) {
-  d.frequency = +d.frequency;
+  d.date = parseTime(d.date);
+  d.close = +d.close;
   return d;
 }
 
 </script>
+{% endblock %} 

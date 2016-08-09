@@ -4,16 +4,22 @@
 <head>
 		<meta charset="utf-8">
 		<title>{% block title%} D3 Chart{% endblock %}</title>
-		<link href="{% static "css/base.css" %}" rel="stylesheet">
+		<link href="{% static "css/base.css" %}" rel="stylesheet">	
+		
 		{% block pageresource%}{% endblock %}
 </head>
 <body>
 	<div id="header">
-		<a href="/" class ="logo">D3 Chart </a>
+		<a href="/d3" class ="logo">D3 Chart </a>
 	</div>
 	<div id="subheader">
 		<div class="cart">
-			data
+			<a href="d3" >d3</a> |
+			<a href="d3lineChart" >linechart</a> | 
+			<a href="d3multiLineChart" >multiline chart</a> | 
+			<a href="d3sunburst" >sunburst</a> | 
+			<a href="d3barChart" >barchart</a> | 
+			<a href="d3circlepack" >circlepack</a> |
 		</div>
 	</div>
 	<div id = "content">
