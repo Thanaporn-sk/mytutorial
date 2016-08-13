@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def d3Chain(request):
@@ -24,3 +25,8 @@ def d3barChart(request):
 def d3sunburst(request):
 
   return render(request,'d3/d3sunburst.html')     
+
+@login_required
+def d3sunburstwithLine(request):
+
+  return render(request,'d3/d3sunburstwithLine.html')       

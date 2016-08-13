@@ -1,97 +1,7 @@
-{% extends "base.html" %}
-{% load static %}
-{% block title %}
- {% endblock%}
-{% block pageresource%}
-
-    <script src="//d3js.org/d3.v3.min.js"></script>
-    <link rel="stylesheet" type="text/css"
-      href="https://fonts.googleapis.com/css?family=Open+Sans:400,600">
-    <!--link rel="stylesheet" type="text/css" href="sequences.css"/-->
-   <style>
-   body {
-  font-family: 'Open Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  background-color: #fff;
-
-  margin-top: 10px;
-}
-
-#main {
-  float: left;
-  width: 750px;
-}
-
-#sidebar {
-  float: right;
-  width: 100px;
-}
-
-#sequence {
-  width: 600px;
-  height: 70px;
-}
-
-#legend {
-  padding: 10px 0 0 3px;
-}
-
-#sequence text, #legend text {
-  font-weight: 600;
-  fill: #fff;
-}
-
-#chart {
-  position: relative;
-}
-
-#chart path {
-  stroke: #fff;
-}
-
-#explanation {
-  position: absolute;
-  top: 260px;
-  left: 305px;
-  width: 140px;
-  text-align: center;
-  color: #666;
-  z-index: -1;
-}
-
-#percentage {
-  font-size: 2.5em;
-}
-   </style> 
-
- {% endblock %} 
-{% block content %}
-    <div id="main">
-      <div id="sequence"></div>
-      <div id="chart">
-        <div id="explanation" style="visibility: hidden;">
-          <span id="percentage"></span><br/>
-          of visits begin with this sequence of pages
-        </div>
-      </div>
-    </div>
-    <div id="sidebar">
-      <input type="checkbox" id="togglelegend"> Legend<br/>
-      <div id="legend" style="visibility: hidden;"></div>
-    </div>
-    <!--script type="text/javascript" src="sequences.js"></script-->
-    <script type="text/javascript">
-      // Hack to make this example display correctly in an iframe on bl.ocks.org
-      d3.select(self.frameElement).style("height", "700px");
-  </script> 
-
-   <script type="text/javascript">
 // Dimensions of sunburst.
 var width = 750;
 var height = 600;
 var radius = Math.min(width, height) / 2;
-var datafile = "{% static "csv/visit_sequences.csv" %}";
 
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
 var b = {
@@ -130,7 +40,7 @@ var arc = d3.svg.arc()
 
 // Use d3.text and d3.csv.parseRows so that we do not need to have a header
 // row, and can receive the csv as an array of arrays.
-d3.text(datafile, function(text) {
+d3.text("{% static "csv/visit_sequences.csv" %}", function(text) {
   var csv = d3.csv.parseRows(text);
   var json = buildHierarchy(csv);
   createVisualization(json);
@@ -393,7 +303,3 @@ function buildHierarchy(csv) {
   }
   return root;
 };
-   </script>
-  
-
- {% endblock %} 
